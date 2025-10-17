@@ -14,28 +14,28 @@ interface Project {
 const Projects = () => {
   const projects: Project[] = [
     {
-      title: "Projeto Épico 1",
-      description: "Descrição do seu projeto incrível. Sistema completo com funcionalidades avançadas.",
-      technologies: ["React", "Node.js", "PostgreSQL"],
-      githubUrl: "https://github.com/seuusuario/projeto1",
-      liveUrl: "https://projeto1.com",
+      title: "Projeto Oiai - Backend",
+      description: "Projeto para estudo e prática de Laravel, Docker e MySQL.",
+      technologies: ["PHP Laravel", "Docker", "MySQL"],
+      githubUrl: "https://github.com/stylbandeira/oiai",
+      // liveUrl: "https://projeto1.com",
       stars: 42,
       difficulty: "legendary"
     },
     {
-      title: "Projeto Épico 2",
-      description: "Outro projeto impressionante que resolve problemas reais com elegância.",
-      technologies: ["TypeScript", "Next.js", "Tailwind"],
-      githubUrl: "https://github.com/seuusuario/projeto2",
+      title: "Montink Project",
+      description: "Projeto criado para processo seletivo da Montink.",
+      technologies: ["PHP Laravel", "Javascript", "Blade", "MySQL"],
+      githubUrl: "https://github.com/stylbandeira/montik",
       stars: 28,
       difficulty: "rare"
     },
     {
-      title: "Projeto Épico 3",
-      description: "Aplicação web moderna com design responsivo e performance otimizada.",
-      technologies: ["Vue.js", "Express", "MongoDB"],
-      githubUrl: "https://github.com/seuusuario/projeto3",
-      liveUrl: "https://projeto3.com",
+      title: "Projeto Oiai - Front",
+      description: "Projeto para estudo e prática de Front-end usando Typescript.",
+      technologies: ["TypeScript"],
+      githubUrl: "https://github.com/stylbandeira/shopwise-route-planner",
+      // liveUrl: "https://projeto1.com",
       stars: 15,
       difficulty: "uncommon"
     }
@@ -59,7 +59,7 @@ const Projects = () => {
     <section className="py-20 px-4 bg-secondary/30 relative">
       {/* RPG Board Background Pattern */}
       <div className="absolute inset-0 opacity-5 bg-[linear-gradient(rgba(255,255,255,0.1)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.1)_2px,transparent_2px)] bg-[size:40px_40px]" />
-      
+
       <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-3 mb-4">
@@ -84,7 +84,7 @@ const Projects = () => {
               <div className="absolute top-2 right-2 text-2xl opacity-20 group-hover:opacity-40 transition-opacity">
                 🎲
               </div>
-              
+
               {/* Header with difficulty badge */}
               <div className="p-6 pb-4">
                 <div className="flex items-start justify-between mb-3">
@@ -135,7 +135,7 @@ const Projects = () => {
                     GitHub
                   </a>
                 </Button>
-                
+
                 {project.liveUrl && (
                   <Button
                     size="sm"
@@ -160,7 +160,7 @@ const Projects = () => {
             className="border-primary/50 hover:border-primary"
             asChild
           >
-            <a href="https://github.com/seuusuario" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/stylbandeira" target="_blank" rel="noopener noreferrer">
               <Github className="w-5 h-5 mr-2" />
               Ver todos os projetos no GitHub
             </a>

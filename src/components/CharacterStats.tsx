@@ -13,11 +13,10 @@ const DiceLevel = ({ level }: { level: number }) => {
       {[...Array(5)].map((_, index) => (
         <div
           key={index}
-          className={`w-6 h-6 rounded border-2 flex items-center justify-center text-xs font-bold transition-all ${
-            index < level
-              ? "border-accent bg-accent/20 text-accent"
-              : "border-muted bg-muted/10 text-muted-foreground/30"
-          }`}
+          className={`w-6 h-6 rounded border-2 flex items-center justify-center text-xs font-bold transition-all ${index < level
+            ? "border-accent bg-accent/20 text-accent"
+            : "border-muted bg-muted/10 text-muted-foreground/30"
+            }`}
         >
           {index < level ? "●" : "○"}
         </div>
@@ -28,18 +27,19 @@ const DiceLevel = ({ level }: { level: number }) => {
 
 const CharacterStats = () => {
   const technologies: Technology[] = [
-    { name: "React", level: 5, category: "Frontend" },
-    { name: "TypeScript", level: 5, category: "Frontend" },
-    { name: "Tailwind CSS", level: 4, category: "Frontend" },
-    { name: "Next.js", level: 4, category: "Frontend" },
-    { name: "Vue.js", level: 3, category: "Frontend" },
-    { name: "Node.js", level: 5, category: "Backend" },
-    { name: "Python", level: 4, category: "Backend" },
-    { name: "PostgreSQL", level: 4, category: "Backend" },
+    { name: "React", level: 3, category: "Frontend" },
+    { name: "TypeScript", level: 3, category: "Frontend" },
+    { name: "Tailwind CSS", level: 3, category: "Frontend" },
+    { name: "Next.js", level: 2, category: "Frontend" },
+    { name: "Vue.js", level: 2, category: "Frontend" },
+    { name: "Laravel", level: 4, category: "Backend" },
+    { name: "Codeigniter", level: 4, category: "Backend" },
+    { name: "PostgreSQL", level: 3, category: "Backend" },
     { name: "MongoDB", level: 3, category: "Backend" },
+    { name: "Python", level: 2, category: "Backend" },
+    { name: "Node.js", level: 2, category: "Backend" },
     { name: "Docker", level: 4, category: "DevOps" },
-    { name: "AWS", level: 3, category: "DevOps" },
-    { name: "React Native", level: 3, category: "Mobile" },
+    { name: "AWS", level: 1, category: "DevOps" },
   ];
 
   const categories = ["Frontend", "Backend", "DevOps", "Mobile"] as const;
@@ -48,7 +48,7 @@ const CharacterStats = () => {
     <section className="py-20 px-4 relative">
       {/* RPG Board Background Pattern */}
       <div className="absolute inset-0 opacity-5 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
-      
+
       <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4 text-accent">
@@ -68,7 +68,7 @@ const CharacterStats = () => {
           {categories.map((category) => {
             const categoryTechs = technologies.filter(tech => tech.category === category);
             if (categoryTechs.length === 0) return null;
-            
+
             return (
               <div
                 key={category}
@@ -78,7 +78,7 @@ const CharacterStats = () => {
                 <div className="absolute -top-4 -right-4 text-primary/10 rotate-12">
                   <Dices className="w-24 h-24" />
                 </div>
-                
+
                 <h3 className="text-xl font-bold mb-6 text-primary flex items-center gap-2">
                   <span className="text-2xl">
                     {category === "Frontend" && "🎨"}
@@ -88,7 +88,7 @@ const CharacterStats = () => {
                   </span>
                   {category}
                 </h3>
-                
+
                 <div className="space-y-4 relative z-10">
                   {categoryTechs.map((tech) => (
                     <div

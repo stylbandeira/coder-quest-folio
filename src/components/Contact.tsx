@@ -24,11 +24,11 @@ const Contact = () => {
                 <Mail className="w-6 h-6 text-primary" />
               </div>
               <span className="font-semibold">Email</span>
-              <span className="text-sm text-muted-foreground">seu.email@exemplo.com</span>
+              <span className="text-sm text-muted-foreground">stylbandeira@gmail.com</span>
             </a>
 
             <a
-              href="https://linkedin.com/in/seuusuario"
+              href="https://www.linkedin.com/in/styl-bandeira/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center gap-3 p-6 bg-secondary/50 border border-primary/30 rounded-lg hover:border-primary transition-all hover:shadow-lg hover:shadow-primary/20"
@@ -37,11 +37,11 @@ const Contact = () => {
                 <Linkedin className="w-6 h-6 text-primary" />
               </div>
               <span className="font-semibold">LinkedIn</span>
-              <span className="text-sm text-muted-foreground">@seuusuario</span>
+              <span className="text-sm text-muted-foreground">@stylbandeira</span>
             </a>
 
             <a
-              href="https://github.com/seuusuario"
+              href="https://github.com/stylbandeira"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center gap-3 p-6 bg-secondary/50 border border-primary/30 rounded-lg hover:border-primary transition-all hover:shadow-lg hover:shadow-primary/20"
@@ -50,7 +50,7 @@ const Contact = () => {
                 <Github className="w-6 h-6 text-primary" />
               </div>
               <span className="font-semibold">GitHub</span>
-              <span className="text-sm text-muted-foreground">@seuusuario</span>
+              <span className="text-sm text-muted-foreground">@stylbandeira</span>
             </a>
           </div>
 
@@ -63,7 +63,7 @@ const Contact = () => {
               className="bg-primary hover:bg-primary/90"
               asChild
             >
-              <a href="mailto:seu.email@exemplo.com">
+              <a href="https://wa.me/87996236447">
                 <Send className="w-5 h-5 mr-2" />
                 Enviar Mensagem
               </a>
