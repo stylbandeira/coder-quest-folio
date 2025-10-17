@@ -56,12 +56,19 @@ const Projects = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-secondary/30">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-20 px-4 bg-secondary/30 relative">
+      {/* RPG Board Background Pattern */}
+      <div className="absolute inset-0 opacity-5 bg-[linear-gradient(rgba(255,255,255,0.1)_2px,transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.1)_2px,transparent_2px)] bg-[size:40px_40px]" />
+      
+      <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-accent">
-            Quests Completadas
-          </h2>
+          <div className="inline-flex items-center gap-3 mb-4">
+            <span className="text-4xl animate-float">🎲</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-accent">
+              Quests Completadas
+            </h2>
+            <span className="text-4xl animate-float" style={{ animationDelay: "0.5s" }}>⚔️</span>
+          </div>
           <p className="text-muted-foreground text-lg">
             Projetos e conquistas no GitHub
           </p>
@@ -71,15 +78,21 @@ const Projects = () => {
           {projects.map((project, index) => (
             <div
               key={index}
-              className="bg-card border-2 border-primary/30 rounded-lg overflow-hidden hover:border-primary transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 group"
+              className="bg-card border-2 border-primary/30 rounded-lg overflow-hidden hover:border-primary transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 group relative"
             >
+              {/* RPG decorative element */}
+              <div className="absolute top-2 right-2 text-2xl opacity-20 group-hover:opacity-40 transition-opacity">
+                🎲
+              </div>
+              
               {/* Header with difficulty badge */}
               <div className="p-6 pb-4">
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
                     {project.title}
                   </h3>
-                  <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${difficultyColors[project.difficulty]}`}>
+                  <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${difficultyColors[project.difficulty]} flex items-center gap-1`}>
+                    <span>⭐</span>
                     {difficultyLabels[project.difficulty]}
                   </div>
                 </div>

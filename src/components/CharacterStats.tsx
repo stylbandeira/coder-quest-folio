@@ -1,136 +1,135 @@
-import { Brain, Code, Zap, Shield, Users, Rocket } from "lucide-react";
+import { Dices } from "lucide-react";
 
-interface Stat {
+interface Technology {
   name: string;
-  value: number;
-  max: number;
-  icon: React.ReactNode;
-  description: string;
+  level: number; // 0-5
+  category: "Frontend" | "Backend" | "DevOps" | "Mobile";
 }
 
+// Dice component to represent skill level
+const DiceLevel = ({ level }: { level: number }) => {
+  return (
+    <div className="flex gap-1">
+      {[...Array(5)].map((_, index) => (
+        <div
+          key={index}
+          className={`w-6 h-6 rounded border-2 flex items-center justify-center text-xs font-bold transition-all ${
+            index < level
+              ? "border-accent bg-accent/20 text-accent"
+              : "border-muted bg-muted/10 text-muted-foreground/30"
+          }`}
+        >
+          {index < level ? "●" : "○"}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const CharacterStats = () => {
-  const stats: Stat[] = [
-    {
-      name: "Inteligência",
-      value: 95,
-      max: 100,
-      icon: <Brain className="w-6 h-6" />,
-      description: "Resolução de problemas e algoritmos"
-    },
-    {
-      name: "Código",
-      value: 90,
-      max: 100,
-      icon: <Code className="w-6 h-6" />,
-      description: "Domínio de linguagens e frameworks"
-    },
-    {
-      name: "Agilidade",
-      value: 85,
-      max: 100,
-      icon: <Zap className="w-6 h-6" />,
-      description: "Velocidade de desenvolvimento"
-    },
-    {
-      name: "Defesa",
-      value: 88,
-      max: 100,
-      icon: <Shield className="w-6 h-6" />,
-      description: "Segurança e boas práticas"
-    },
-    {
-      name: "Carisma",
-      value: 92,
-      max: 100,
-      icon: <Users className="w-6 h-6" />,
-      description: "Trabalho em equipe e comunicação"
-    },
-    {
-      name: "Criatividade",
-      value: 87,
-      max: 100,
-      icon: <Rocket className="w-6 h-6" />,
-      description: "Inovação e soluções criativas"
-    }
+  const technologies: Technology[] = [
+    { name: "React", level: 5, category: "Frontend" },
+    { name: "TypeScript", level: 5, category: "Frontend" },
+    { name: "Tailwind CSS", level: 4, category: "Frontend" },
+    { name: "Next.js", level: 4, category: "Frontend" },
+    { name: "Vue.js", level: 3, category: "Frontend" },
+    { name: "Node.js", level: 5, category: "Backend" },
+    { name: "Python", level: 4, category: "Backend" },
+    { name: "PostgreSQL", level: 4, category: "Backend" },
+    { name: "MongoDB", level: 3, category: "Backend" },
+    { name: "Docker", level: 4, category: "DevOps" },
+    { name: "AWS", level: 3, category: "DevOps" },
+    { name: "React Native", level: 3, category: "Mobile" },
   ];
 
+  const categories = ["Frontend", "Backend", "DevOps", "Mobile"] as const;
+
   return (
-    <section className="py-20 px-4">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-20 px-4 relative">
+      {/* RPG Board Background Pattern */}
+      <div className="absolute inset-0 opacity-5 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      
+      <div className="max-w-6xl mx-auto relative">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-accent">
-            Character Stats
-          </h2>
+          <div className="inline-flex items-center gap-2 mb-4 text-accent">
+            <Dices className="w-8 h-8 animate-float" />
+            <h2 className="text-4xl md:text-5xl font-bold">
+              Arsenal de Habilidades
+            </h2>
+            <Dices className="w-8 h-8 animate-float" />
+          </div>
           <p className="text-muted-foreground text-lg">
-            Atributos e habilidades do desenvolvedor
+            Nível de proficiência em tecnologias (0-5 pontos)
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-card border-2 border-primary/30 rounded-lg p-6 hover:border-primary transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-primary/20 rounded-lg text-primary">
-                  {stat.icon}
+        {/* Tech Skills Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {categories.map((category) => {
+            const categoryTechs = technologies.filter(tech => tech.category === category);
+            if (categoryTechs.length === 0) return null;
+            
+            return (
+              <div
+                key={category}
+                className="bg-card border-2 border-primary/30 rounded-lg p-6 hover:border-primary transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 relative overflow-hidden"
+              >
+                {/* Decorative dice in corner */}
+                <div className="absolute -top-4 -right-4 text-primary/10 rotate-12">
+                  <Dices className="w-24 h-24" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg">{stat.name}</h3>
-                  <p className="text-sm text-muted-foreground">{stat.description}</p>
+                
+                <h3 className="text-xl font-bold mb-6 text-primary flex items-center gap-2">
+                  <span className="text-2xl">
+                    {category === "Frontend" && "🎨"}
+                    {category === "Backend" && "⚙️"}
+                    {category === "DevOps" && "☁️"}
+                    {category === "Mobile" && "📱"}
+                  </span>
+                  {category}
+                </h3>
+                
+                <div className="space-y-4 relative z-10">
+                  {categoryTechs.map((tech) => (
+                    <div
+                      key={tech.name}
+                      className="flex items-center justify-between gap-4 p-3 bg-secondary/50 rounded border border-primary/20 hover:border-primary/50 transition-all"
+                    >
+                      <span className="font-semibold text-foreground min-w-[120px]">
+                        {tech.name}
+                      </span>
+                      <DiceLevel level={tech.level} />
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-foreground/80">Nível</span>
-                  <span className="text-primary font-bold">{stat.value}/{stat.max}</span>
-                </div>
-                <div className="h-3 bg-secondary rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-1000 ease-out"
-                    style={{ width: `${(stat.value / stat.max) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Skills/Technologies Section */}
-        <div className="mt-16 bg-card border-2 border-primary/30 rounded-lg p-8">
-          <h3 className="text-2xl font-bold mb-6 text-center text-accent">
-            Arsenal de Tecnologias
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-primary">Frontend</h4>
-              <div className="flex flex-wrap gap-2">
-                {["React", "TypeScript", "Tailwind CSS", "Next.js", "Vue.js"].map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm hover:bg-primary/20 transition-colors"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
+        {/* Legend */}
+        <div className="mt-12 bg-card border-2 border-accent/30 rounded-lg p-6 text-center">
+          <h4 className="text-lg font-bold mb-4 text-accent">Sistema de Pontuação</h4>
+          <div className="flex flex-wrap justify-center gap-8 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">0-1:</span>
+              <span className="text-foreground">Iniciante</span>
             </div>
-
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-primary">Backend</h4>
-              <div className="flex flex-wrap gap-2">
-                {["Node.js", "Python", "PostgreSQL", "MongoDB", "Docker"].map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm hover:bg-primary/20 transition-colors"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">2:</span>
+              <span className="text-foreground">Básico</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">3:</span>
+              <span className="text-foreground">Intermediário</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">4:</span>
+              <span className="text-foreground">Avançado</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">5:</span>
+              <span className="text-accent font-bold">Mestre</span>
             </div>
           </div>
         </div>
