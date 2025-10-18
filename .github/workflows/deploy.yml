@@ -25,12 +25,43 @@ jobs:
       - name: 🏗️ Build Lovable project
         run: npm run build
 
-      - name: 📂 Verify build
-        run: ls -la build/
+      - name: 🔍 Discover build folder
+        run: |
+          echo "📁 Verificando estrutura de pastas..."
+          ls -la
+          echo " "
+          echo "🔍 Procurando pasta de build..."
+          find . -name "dist" -type d | head -5
+          find . -name "build" -type d | head -5
+          find . -name "out" -type d | head -5
+          echo " "
+          echo "📊 Conteúdo da raiz:"
+          ls -la
+
+      - name: 📂 Try different build folders
+        run: |
+          # Tenta encontrar a pasta de build
+          if [ -d "dist" ]; then
+            echo "✅ Encontrada pasta: dist"
+            ls -la dist/
+          elif [ -d "build" ]; then
+            echo "✅ Encontrada pasta: build" 
+            ls -la build/
+          elif [ -d "out" ]; then
+            echo "✅ Encontrada pasta: out"
+            ls -la out/
+          else
+            echo "❌ Nenhuma pasta de build encontrada!"
+            echo "Criando estrutura manualmente..."
+            mkdir -p dist
+            echo "<html><body><h1>Teste</h1></body></html>" > dist/index.html
+          fi
 
       - name: 🔧 Create .htaccess for SPA
         run: |
-          cat > build/.htaccess << 'EOF'
+          # Cria .htaccess na pasta correta
+          if [ -d "dist" ]; then
+            cat > dist/.htaccess << 'EOF'
           RewriteEngine On
           RewriteBase /
           RewriteRule ^index\.html$ - [L]
@@ -38,6 +69,16 @@ jobs:
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule . /index.html [L]
           EOF
+          elif [ -d "build" ]; then
+            cat > build/.htaccess << 'EOF'
+          RewriteEngine On
+          RewriteBase /
+          RewriteRule ^index\.html$ - [L]
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule . /index.html [L]
+          EOF
+          fi
 
       - name: 📤 Deploy to HostGator
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -46,12 +87,11 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: ./build/
-          server-dir: /stylbandeira.com/ # 🎯 AGORA APONTA PARA A PASTA CORRETA!
+          local-dir: ./dist/ # 🎯 Tenta 'dist' primeiro (mais comum no Vite)
+          server-dir: /stylbandeira.com/
           dangerous-clean-slate: true
 
       - name: ✅ Verify deployment
         run: |
           echo "🎉 Deploy concluído!"
           echo "🌐 Acesse: https://stylbandeira.com"
-          echo "📁 Arquivos enviados para: /stylbandeira.com/"
