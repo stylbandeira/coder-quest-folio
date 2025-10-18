@@ -1,0 +1,57 @@
+name: 🚀 Deploy to HostGator
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🏗️ Build Lovable project
+        run: npm run build
+
+      - name: 📂 Verify build
+        run: ls -la build/
+
+      - name: 🔧 Create .htaccess for SPA
+        run: |
+          cat > build/.htaccess << 'EOF'
+          RewriteEngine On
+          RewriteBase /
+          RewriteRule ^index\.html$ - [L]
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule . /index.html [L]
+          EOF
+
+      - name: 📤 Deploy to HostGator
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: ./build/
+          server-dir: /stylbandeira.com/ # 🎯 AGORA APONTA PARA A PASTA CORRETA!
+          dangerous-clean-slate: true
+
+      - name: ✅ Verify deployment
+        run: |
+          echo "🎉 Deploy concluído!"
+          echo "🌐 Acesse: https://stylbandeira.com"
+          echo "📁 Arquivos enviados para: /stylbandeira.com/"
