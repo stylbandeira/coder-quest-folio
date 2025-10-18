@@ -8,8 +8,11 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: '/coder-quest-folio/', // 🎯 ADICIONE ESTA LINHA
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  base: mode === 'production' ? '/coder-quest-folio/' : '/', // 🎯 Diferente para dev/prod
+  plugins: [
+    react(),
+    mode === "development" && componentTagger()
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
