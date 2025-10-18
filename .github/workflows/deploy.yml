@@ -1,4 +1,4 @@
-name: 🚀 Deploy Lovable to GitHub Pages
+name: 🚀 Deploy Lovable
 
 on:
   push:
@@ -23,8 +23,18 @@ jobs:
       - name: 📦 Instalar dependências
         run: npm ci
 
-      - name: 🏗️ Fazer build
-        run: npm run build
+      - name: 🏗️ Fazer build FORÇANDO base path
+        run: |
+          # Força a variável de ambiente
+          VITE_BASE_URL=/coder-quest-folio/ npm run build
+
+      - name: 🔍 Verificar se os caminhos estão corretos
+        run: |
+          echo "📄 Verificando index.html:"
+          cat dist/index.html | grep -E '(src|href)=' | head -5
+          echo " "
+          echo "📁 Arquivos em dist/:"
+          ls -la dist/
 
       - name: 🚀 Publicar
         uses: peaceiris/actions-gh-pages@v3
@@ -35,9 +45,5 @@ jobs:
 
       - name: ✅ Finalizado
         run: |
-          echo "🎉 SITE NO AR!"
+          echo "🎉 DEPLOY CONCLUÍDO!"
           echo "👉 https://stylbandeira.github.io/coder-quest-folio"
-          echo " "
-          echo "🔧 Se as rotas não funcionarem:"
-          echo "1. Use HashRouter em vez de BrowserRouter"
-          echo "2. Ou acesse diretamente a rota inicial"
