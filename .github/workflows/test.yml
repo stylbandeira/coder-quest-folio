@@ -1,0 +1,33 @@
+name: 🔍 Testar Build
+
+on:
+  workflow_dispatch: # Permite executar manualmente
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Instalar e construir
+        run: |
+          npm ci
+          npm run build
+
+      - name: Mostrar resultado
+        run: |
+          echo "📂 Toda a estrutura:"
+          ls -la
+          echo " "
+          echo "🎯 Pasta de build:"
+          if [ -d "dist" ]; then
+            ls -la dist/
+          elif [ -d "build" ]; then
+            ls -la build/
+          fi
