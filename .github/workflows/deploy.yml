@@ -23,10 +23,10 @@ jobs:
       - name: 📦 Instalar dependências
         run: npm ci
 
-      - name: 🏗️ Fazer build do projeto
+      - name: 🏗️ Fazer build
         run: npm run build
 
-      - name: 🚀 Publicar no GitHub Pages
+      - name: 🚀 Publicar
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -37,3 +37,7 @@ jobs:
         run: |
           echo "🎉 SITE NO AR!"
           echo "👉 https://stylbandeira.github.io/coder-quest-folio"
+          echo " "
+          echo "🔧 Se as rotas não funcionarem:"
+          echo "1. Use HashRouter em vez de BrowserRouter"
+          echo "2. Ou acesse diretamente a rota inicial"
