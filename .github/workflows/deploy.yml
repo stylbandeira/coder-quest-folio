@@ -1,4 +1,4 @@
-name: 🚀 Deploy to HostGator
+name: 🚀 Deploy to HostGator via SFTP
 
 on:
   push:
@@ -22,46 +22,24 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🏗️ Build Lovable project
+      - name: 🏗️ Build project
         run: npm run build
 
-      - name: 🔍 Discover build folder
+      - name: 🔍 Find build folder
         run: |
-          echo "📁 Verificando estrutura de pastas..."
-          ls -la
-          echo " "
-          echo "🔍 Procurando pasta de build..."
-          find . -name "dist" -type d | head -5
-          find . -name "build" -type d | head -5
-          find . -name "out" -type d | head -5
-          echo " "
-          echo "📊 Conteúdo da raiz:"
-          ls -la
-
-      - name: 📂 Try different build folders
-        run: |
-          # Tenta encontrar a pasta de build
           if [ -d "dist" ]; then
-            echo "✅ Encontrada pasta: dist"
-            ls -la dist/
+            echo "BUILD_FOLDER=dist" >> $GITHUB_ENV
           elif [ -d "build" ]; then
-            echo "✅ Encontrada pasta: build" 
-            ls -la build/
-          elif [ -d "out" ]; then
-            echo "✅ Encontrada pasta: out"
-            ls -la out/
+            echo "BUILD_FOLDER=build" >> $GITHUB_ENV
           else
             echo "❌ Nenhuma pasta de build encontrada!"
-            echo "Criando estrutura manualmente..."
-            mkdir -p dist
-            echo "<html><body><h1>Teste</h1></body></html>" > dist/index.html
+            exit 1
           fi
+          echo "📁 Pasta de build: ${{ env.BUILD_FOLDER }}"
 
-      - name: 🔧 Create .htaccess for SPA
+      - name: 🔧 Create .htaccess
         run: |
-          # Cria .htaccess na pasta correta
-          if [ -d "dist" ]; then
-            cat > dist/.htaccess << 'EOF'
+          cat > ${{ env.BUILD_FOLDER }}/.htaccess << 'EOF'
           RewriteEngine On
           RewriteBase /
           RewriteRule ^index\.html$ - [L]
@@ -69,29 +47,18 @@ jobs:
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule . /index.html [L]
           EOF
-          elif [ -d "build" ]; then
-            cat > build/.htaccess << 'EOF'
-          RewriteEngine On
-          RewriteBase /
-          RewriteRule ^index\.html$ - [L]
-          RewriteCond %{REQUEST_FILENAME} !-f
-          RewriteCond %{REQUEST_FILENAME} !-d
-          RewriteRule . /index.html [L]
-          EOF
-          fi
 
-      - name: 📤 Deploy to HostGator
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: 📤 Deploy via SFTP
+        uses: easingthemes/ssh-deploy@v4.1.8
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
-          local-dir: ./dist/ # 🎯 Tenta 'dist' primeiro (mais comum no Vite)
-          server-dir: /stylbandeira.com/
-          dangerous-clean-slate: true
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+          SOURCE: ${{ env.BUILD_FOLDER }}/
+          TARGET: ${{ secrets.REMOTE_TARGET }}
 
       - name: ✅ Verify deployment
         run: |
-          echo "🎉 Deploy concluído!"
+          echo "🎉 Deploy concluído via SFTP!"
           echo "🌐 Acesse: https://stylbandeira.com"
