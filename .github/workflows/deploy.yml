@@ -24,25 +24,18 @@ jobs:
         run: npm ci
 
       - name: 🏗️ Construir projeto
-        run: |
-          npm run build
-          echo "✅ Build concluído!"
+        run: npm run build
 
-      - name: 🔍 Verificar arquivos
+      - name: 🔧 Corrigir base path para GitHub Pages
         run: |
-          echo "📁 Arquivos gerados:"
-          if [ -d "dist" ]; then
-            echo "Pasta: dist"
-            ls -la dist/
-          elif [ -d "build" ]; then
-            echo "Pasta: build"
-            ls -la build/
-          else
-            echo "❌ Nenhuma pasta encontrada!"
-            ls -la
-          fi
+          cd dist
+          # Corrige caminhos absolutos para relativos
+          sed -i 's|href="/|href="./|g' index.html
+          sed -i 's|src="/|src="./|g' index.html
+          sed -i 's|content="/|content="./|g' index.html
+          echo "✅ Caminhos corrigidos para GitHub Pages"
 
-      - name: 🚀 Publicar site
+      - name: 🚀 Publicar no GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -51,5 +44,9 @@ jobs:
 
       - name: ✅ Sucesso!
         run: |
-          echo "🎉 Site publicado!"
-          echo "🌐 Acesse: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo "🎉 DEPLOY CONCLUÍDO COM SUCESSO!"
+          echo "🌐 Seu site está em:"
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo " "
+          echo "⏰ Pode levar 2-5 minutos para aparecer"
+          echo "🔁 Se aparecer em branco, force refresh com Ctrl+F5"
