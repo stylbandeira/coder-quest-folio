@@ -1,57 +1,76 @@
-name: 🚀 Deploy Portfolio Fix
+name: 🚀 Deploy Manual Fix
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
+    
     steps:
-      - name: 🚚 Baixar código
-        uses: actions/checkout@v4
+    - name: 🚚 Baixar código
+      uses: actions/checkout@v4
+    
+    - name: ⎔ Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 📦 Instalar dependências
+      run: npm ci
+      
+    - name: 🏗️ Construir projeto
+      run: npm run build
+      
+    - name: 🔧 Criar HTML correto manualmente
+      run: |
+        # Entra na pasta dist
+        cd dist
+        
+        # Cria um novo index.html CORRETO baseado nos arquivos reais
+        cat > index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dev Portfolio</title>
+    <script type="module" crossorigin src="./assets/index-Bn45uE_U.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-xfp6jN1l.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+EOF
 
-      - name: ⎔ Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
-
-      - name: 📦 Instalar dependências
-        run: npm ci
-
-      - name: 🏗️ Construir projeto
-        run: |
-          # Força o base path
-          VITE_BASE_PATH="/coder-quest-folio/" npm run build
-
-      - name: 🔧 Corrigir todos os caminhos manualmente
-        run: |
-          cd dist
-          # Corrige CSS, JS, imagens e favicon
-          sed -i 's|href="/|href="./|g' index.html
-          sed -i 's|src="/|src="./|g' index.html
-          sed -i 's|content="/|content="./|g' index.html
-          sed -i 's|url(/|url(./|g' assets/*.css 2>/dev/null || true
-
-          # Verifica as correções
-          echo "✅ Caminhos corrigidos:"
-          grep -o 'src="[^"]*"' index.html | head -5
-          grep -o 'href="[^"]*"' index.html | head -5
-
-      - name: 🚀 Publicar no GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
-
-      - name: ✅ Sucesso!
-        run: |
-          echo "🎉 DEPLOY CONCLUÍDO!"
-          echo "🌐 Acesse: https://${{ github.repository_owner }}.github.io/coder-quest-folio"
-          echo " "
-          echo "⚠️  Force refresh com Ctrl+F5"
+        echo "✅ HTML criado manualmente"
+        echo "📁 Arquivos na pasta dist:"
+        ls -la
+        echo " "
+        echo "🔍 Verificando caminhos no HTML:"
+        grep -o 'src="[^"]*"' index.html
+        grep -o 'href="[^"]*"' index.html
+        
+    - name: 🚀 Publicar
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
+        force_orphan: true
+        
+    - name: ✅ Final
+      run: |
+        echo "🎉 SITE NO AR!"
+        echo "👉 ACESSE: https://stylbandeira.github.io/coder-quest-folio"
+        echo " "
+        echo "⚠️  INSTRUÇÕES:"
+        echo "1. Aguarde 2 minutos"
+        echo "2. Abra o link acima"
+        echo "3. APERTE Ctrl+F5 (force refresh)"
+        echo "4. Se não funcionar, APERTE F12 e me mostre os erros"
