@@ -1,4 +1,4 @@
-name: 🚀 Deploy com Cache Bust
+name: 🚀 Deploy Nuclear
 
 on:
   push:
@@ -11,39 +11,17 @@ jobs:
       contents: write
 
     steps:
-      - name: 🚚 Baixar código
-        uses: actions/checkout@v4
-
-      - name: ⎔ Configurar Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "18"
-          cache: "npm"
+      - run: npm ci
+      - run: npm run build
 
-      - name: 📦 Instalar dependências
-        run: npm ci
-
-      - name: 🏗️ Fazer build
-        run: npm run build
-
-      - name: 🔧 Quebrar cache
-        run: |
-          cd dist
-          TIMESTAMP=$(date +%s)
-          sed -i "s|\.js|.js?v=$TIMESTAMP|g" index.html
-          sed -i "s|\.css|.css?v=$TIMESTAMP|g" index.html
-          echo "✅ Cache bust aplicado"
-
-      - name: 🚀 Publicar
+      - name: 🚀 Deploy FORÇADO
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
-
-      - name: ✅ Final
-        run: |
-          echo "🎉 DEPLOY COM CACHE BUST!"
-          echo "🌐 https://stylbandeira.github.io/coder-quest-folio"
-          echo " "
-          echo "⚠️  AGORA VAI FUNCIONAR!"
+          keep_files: false # 🎯 REMOVE TODOS OS ARQUIVOS ANTIGOS
