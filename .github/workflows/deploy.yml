@@ -1,69 +1,55 @@
-name: 🚀 Deploy to GitHub Pages
+name: 🚀 Deploy Portfolio
 
 on:
   push:
     branches: [main]
-  workflow_dispatch: # Permite deploy manual
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pages: write
-      id-token: write
 
     steps:
-      - name: 🚚 Checkout code
+      - name: 🚚 Baixar código
         uses: actions/checkout@v4
 
-      - name: ⎔ Setup Node.js
+      - name: ⎔ Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "npm"
 
-      - name: 📦 Install dependencies
+      - name: 📦 Instalar dependências
         run: npm ci
 
-      - name: 🏗️ Build project
-        run: npm run build
-
-      - name: 🔍 Discover build folder
+      - name: 🏗️ Construir projeto
         run: |
-          echo "📁 Procurando pasta de build..."
+          npm run build
+          echo "✅ Build concluído!"
+
+      - name: 🔍 Verificar arquivos
+        run: |
+          echo "📁 Arquivos gerados:"
           if [ -d "dist" ]; then
-            echo "✅ Encontrada pasta: dist"
-            echo "BUILD_FOLDER=dist" >> $GITHUB_ENV
+            echo "Pasta: dist"
             ls -la dist/
           elif [ -d "build" ]; then
-            echo "✅ Encontrada pasta: build"
-            echo "BUILD_FOLDER=build" >> $GITHUB_ENV
+            echo "Pasta: build"
             ls -la build/
           else
-            echo "❌ Nenhuma pasta de build encontrada!"
-            echo "Criando estrutura básica..."
-            mkdir -p dist
-            echo '<!DOCTYPE html><html><head><title>Portfólio</title></head><body><h1>Meu Portfólio</h1><p>Deploy em andamento...</p></body></html>' > dist/index.html
-            echo "BUILD_FOLDER=dist" >> $GITHUB_ENV
+            echo "❌ Nenhuma pasta encontrada!"
+            ls -la
           fi
 
-      - name: 📁 Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: 📤 Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: 🚀 Publicar site
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: ${{ env.BUILD_FOLDER }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
 
-      - name: 🚀 Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      - name: ✅ Show deployment URL
+      - name: ✅ Sucesso!
         run: |
-          echo "🎉 Deploy concluído com sucesso!"
-          echo "🌐 Seu site está disponível em:"
-          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
-          echo " "
-          echo "📊 Aguarde alguns minutos para acessar"
+          echo "🎉 Site publicado!"
+          echo "🌐 Acesse: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
