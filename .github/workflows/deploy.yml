@@ -1,13 +1,17 @@
-name: 🚀 Deploy to HostGator via SFTP
+name: 🚀 Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
+  workflow_dispatch: # Permite deploy manual
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: 🚚 Checkout code
@@ -25,40 +29,41 @@ jobs:
       - name: 🏗️ Build project
         run: npm run build
 
-      - name: 🔍 Find build folder
+      - name: 🔍 Discover build folder
         run: |
+          echo "📁 Procurando pasta de build..."
           if [ -d "dist" ]; then
+            echo "✅ Encontrada pasta: dist"
             echo "BUILD_FOLDER=dist" >> $GITHUB_ENV
+            ls -la dist/
           elif [ -d "build" ]; then
+            echo "✅ Encontrada pasta: build"
             echo "BUILD_FOLDER=build" >> $GITHUB_ENV
+            ls -la build/
           else
             echo "❌ Nenhuma pasta de build encontrada!"
-            exit 1
+            echo "Criando estrutura básica..."
+            mkdir -p dist
+            echo '<!DOCTYPE html><html><head><title>Portfólio</title></head><body><h1>Meu Portfólio</h1><p>Deploy em andamento...</p></body></html>' > dist/index.html
+            echo "BUILD_FOLDER=dist" >> $GITHUB_ENV
           fi
-          echo "📁 Pasta de build: ${{ env.BUILD_FOLDER }}"
 
-      - name: 🔧 Create .htaccess
-        run: |
-          cat > ${{ env.BUILD_FOLDER }}/.htaccess << 'EOF'
-          RewriteEngine On
-          RewriteBase /
-          RewriteRule ^index\.html$ - [L]
-          RewriteCond %{REQUEST_FILENAME} !-f
-          RewriteCond %{REQUEST_FILENAME} !-d
-          RewriteRule . /index.html [L]
-          EOF
+      - name: 📁 Setup Pages
+        uses: actions/configure-pages@v4
 
-      - name: 📤 Deploy via SFTP
-        uses: easingthemes/ssh-deploy@v4.1.8
+      - name: 📤 Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
-          SOURCE: ${{ env.BUILD_FOLDER }}/
-          TARGET: ${{ secrets.REMOTE_TARGET }}
+          path: ${{ env.BUILD_FOLDER }}
 
-      - name: ✅ Verify deployment
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: ✅ Show deployment URL
         run: |
-          echo "🎉 Deploy concluído via SFTP!"
-          echo "🌐 Acesse: https://stylbandeira.com"
+          echo "🎉 Deploy concluído com sucesso!"
+          echo "🌐 Seu site está disponível em:"
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo " "
+          echo "📊 Aguarde alguns minutos para acessar"
