@@ -1,27 +1,57 @@
-name: 🚀 Deploy Nuclear
+name: Deploy to Hostgator
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: "18"
-      - run: npm ci
-      - run: npm run build
+          cache: "npm"
 
-      - name: 🚀 Deploy FORÇADO
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: List build files
+        run: ls -la dist/
+
+      - name: Create .htaccess file
+        run: |
+          cat > dist/.htaccess << EOF
+          RewriteEngine On
+
+          # Redirecionar HTTP para HTTPS
+          RewriteCond %{HTTPS} off
+          RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+          # Para SPA - todas as rotas vão para index.html
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule . /index.html [L]
+
+          # Cache para arquivos estáticos
+          <FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2)$">
+              Header set Cache-Control "max-age=31536000, public"
+          </FilesMatch>
+          EOF
+
+      - name: Deploy to Hostgator via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
-          keep_files: false # 🎯 REMOVE TODOS OS ARQUIVOS ANTIGOS
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: /public_html/
