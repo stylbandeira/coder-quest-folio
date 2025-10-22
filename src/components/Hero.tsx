@@ -34,7 +34,7 @@ const Hero = () => {
               {/* Character Info */}
               <div className="flex-1">
                 <div className="inline-block bg-accent/20 border border-accent/50 px-4 py-1 rounded-full mb-4">
-                  <span className="text-accent font-semibold text-sm">LEVEL 36 DEVELOPER</span>
+                  <span className="text-accent font-semibold text-sm">LEVEL 35 DEVELOPER</span>
                 </div>
 
                 <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-shine bg-[length:200%_auto]">
