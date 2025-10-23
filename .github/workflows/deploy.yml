@@ -45,6 +45,11 @@ jobs:
           <FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2)$">
               Header set Cache-Control "max-age=31536000, public"
           </FilesMatch>
+
+          # Compressão GZIP
+          <IfModule mod_deflate.c>
+            AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript
+          </IfModule>
           EOF
 
       - name: Deploy to Hostgator via FTP
@@ -55,3 +60,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
           server-dir: /public_html/
+          # ADICIONE ESTAS LINHAS:
+          port: ${{ secrets.FTP_PORT }} # Porta explícita
+          protocol: ftp # Protocolo explícito
+          dangerous-clean-slate: true # Limpa arquivos antigos
