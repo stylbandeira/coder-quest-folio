@@ -60,5 +60,5 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_PORT: ${{ secrets.FTP_PORT }}
           SOURCE: "dist/"
-          TARGET: "/home2/${{ secrets.REMOTE_USER }}/public_html/"
+          TARGET: "/home2/${{ secrets.REMOTE_USER }}/stylbandeira.com/"
           ARGS: "-rltgoDzvO --delete"
