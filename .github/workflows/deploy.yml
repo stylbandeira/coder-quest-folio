@@ -1,4 +1,4 @@
-name: Deploy to Hostgator
+name: Deploy to Hostgator via SFTP
 
 on:
   push:
@@ -24,9 +24,6 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: List build files
-        run: ls -la dist/
-
       - name: Create .htaccess file
         run: |
           cat > dist/.htaccess << EOF
@@ -45,22 +42,23 @@ jobs:
           <FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2)$">
               Header set Cache-Control "max-age=31536000, public"
           </FilesMatch>
-
-          # Compressão GZIP
-          <IfModule mod_deflate.c>
-            AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript
-          </IfModule>
           EOF
 
-      - name: Deploy to Hostgator via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Test SSH Connection
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+          ssh -o BatchMode=yes -p 22 ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "pwd"
+
+      - name: Deploy via SFTP
+        uses: easingthemes/ssh-deploy@v4.1.8
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /public_html/
-          # ADICIONE ESTAS LINHAS:
-          port: ${{ secrets.FTP_PORT }} # Porta explícita
-          protocol: ftp # Protocolo explícito
-          dangerous-clean-slate: true # Limpa arquivos antigos
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PORT: ${{ secrets.FTP_PORT }}
+          SOURCE: "dist/"
+          TARGET: "/public_html/"
+          ARGS: "-rltgoDzvO --delete"
