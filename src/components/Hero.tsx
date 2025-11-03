@@ -57,11 +57,12 @@ const Hero = () => {
                 </div>
 
                 <div className="mt-8 flex flex-wrap gap-4">
-                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    Ver Projetos
-                  </Button>
-
-                  <a href="/public/curriculo_r.pdf" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/stylbandeira" target="_blank" rel="noopener noreferrer">
+                    <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                      Ver Projetos
+                    </Button>
+                  </a>
+                  <a href="https://stylbandeira.com/curriculo_r.pdf" target="_blank" rel="noopener noreferrer">
                     <Button variant="outline" className="border-primary/50 hover:border-primary">
                       Download CV
                     </Button>

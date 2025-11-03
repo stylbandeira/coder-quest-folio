@@ -17,7 +17,7 @@ const Contact = () => {
         <div className="bg-card border-2 border-primary/30 rounded-lg p-8 md:p-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <a
-              href="mailto:seu.email@exemplo.com"
+              href="mailto:stylbandeira@gmail.com"
               className="flex flex-col items-center gap-3 p-6 bg-secondary/50 border border-primary/30 rounded-lg hover:border-primary transition-all hover:shadow-lg hover:shadow-primary/20"
             >
               <div className="p-3 bg-primary/20 rounded-full">
