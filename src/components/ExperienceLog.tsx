@@ -112,7 +112,7 @@ const ExperienceLogs = () => {
                         {/* GIF 1 */}
                         <div className="flex-1 max-w-md">
                             <img
-                                src="/public/hero.gif"
+                                src="https://stylbandeira.com/hero.gif"
                                 alt="Espada animada"
                                 className="w-full h-48 object-contain border-2 border-green-500 rounded-lg"
                             />
